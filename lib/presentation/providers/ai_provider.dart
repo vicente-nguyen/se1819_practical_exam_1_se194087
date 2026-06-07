@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AIProvider with ChangeNotifier {
   String _aiSuggestion = "";
@@ -20,8 +21,12 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // ĐI THI: Thay bằng API Key Gemini thực tế của bạn hoặc lấy từ Env
-      final model = GenerativeModel(model: 'gemini-2.5-flash-lite', apiKey: 'AIzaSyC5leLSHbsVpuQ9Sx4oQLLCHoDzYjTSOeQ');
+      final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
+      if (apiKey.isEmpty) {
+        throw Exception("Gemini API Key is missing in .env file");
+      }
+      
+      final model = GenerativeModel(model: 'gemini-2.0-flash-lite', apiKey: apiKey);
       final prompt = "You are an expert in every aspect. The user is viewing '$productTitle' in the category '$category'. Guide the user on how to store this product longer in exactly two sentences.";
 
       final content = [Content.text(prompt)];

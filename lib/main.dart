@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Import Data Layer
 import 'data/datasources/product_remote_data_source.dart';
@@ -14,7 +15,13 @@ import 'presentation/providers/cart_provider.dart';
 import 'presentation/providers/ai_provider.dart';
 import 'presentation/screens/main_navigation.dart';
 
-void main() {
+void main() async {
+  // Đảm bảo Flutter binding được khởi tạo trước khi dùng dotenv
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load file .env
+  await dotenv.load(fileName: ".env");
+
   // 1. Khởi tạo các lớp dữ liệu hạ tầng (Dependencies Setup)
   final remoteDataSource = ProductRemoteDataSource();
   final productRepository = ProductRepositoryImpl(remoteDataSource: remoteDataSource);
